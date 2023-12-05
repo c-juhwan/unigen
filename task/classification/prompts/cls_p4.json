@@ -1,0 +1,13 @@
+{
+    "placeholders": {
+        "text": "<X>",
+        "label": "<Y>"
+    },
+    "labels": {
+        "0": "negative",
+        "1": "positive"
+    },
+    "prompts": {
+        "instruction": "The text in <Y> sentiment is: \"<X>\""
+    }
+}
