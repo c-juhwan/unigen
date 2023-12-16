@@ -161,6 +161,15 @@ def sungen_train(args: argparse.Namespace):
     logger.addHandler(handler)
     logger.propagate = False
 
+    # Load best theta
+    checkpoint_save_path = os.path.join(args.checkpoint_path, args.task, args.task_dataset, args.model_type)
+    check_path(checkpoint_save_path)
+    if args.training_type in ['unigen', 'unigen_ablation_noisy_label', 'unigen_ablation_hard_label']:
+        checkpoint = torch.load(os.path.join(checkpoint_save_path, 'unigen_best_theta.pt'))
+    else:
+        checkpoint = torch.load(os.path.join(checkpoint_save_path, 'sungen_best_theta.pt'))
+    best_theta_weight = checkpoint['theta'].to(device)
+
     # Load dataset and define dataloader
     write_log(logger, "Loading data")
     dataset_dict, dataloader_dict = {}, {}
@@ -186,6 +195,9 @@ def sungen_train(args: argparse.Namespace):
                                                       f'train_UG_HL_{args.gen_amount}_topk{args.gen_top_k}_topp{args.gen_top_p}_temp{args.gen_temperature}_retemp{args.gen_relabel_temperature}_th{args.gen_relabel_threshold}.pkl'))
         dataset_dict['valid'] = ClassificationDataset(args, os.path.join(args.preprocess_path, args.task, # UniGen is not dataset-specific
                                                       f'valid_UG_HL_{args.gen_amount}_topk{args.gen_top_k}_topp{args.gen_top_p}_temp{args.gen_temperature}_retemp{args.gen_relabel_temperature}_th{args.gen_relabel_threshold}.pkl'))
+
+    dataset_dict['train'] = build_solved_subset(args, dataset_dict['train'], best_theta_weight)
+
     dataloader_dict['train'] = DataLoader(dataset_dict['train'], batch_size=args.batch_size, num_workers=args.num_workers,
                                           shuffle=True, pin_memory=True, drop_last=True)
     dataloader_dict['valid'] = DataLoader(dataset_dict['valid'], batch_size=args.batch_size, num_workers=args.num_workers,
@@ -241,12 +253,6 @@ def sungen_train(args: argparse.Namespace):
                              f"Dataset: {args.task_dataset}",
                              f"Model: {args.model_type}",
                              f"Training: {args.training_type}"])
-
-    # Load best theta
-    checkpoint_save_path = os.path.join(args.checkpoint_path, args.task, args.task_dataset, args.model_type)
-    check_path(checkpoint_save_path)
-    checkpoint = torch.load(os.path.join(checkpoint_save_path, f'{args.training_type}_best_theta.pt'))
-    best_theta_weight = checkpoint['theta']
 
     # Train/Valid - Start training
     start_epoch = 0
@@ -453,7 +459,7 @@ def sungen_train(args: argparse.Namespace):
     # Final - Save best checkpoint as result model
     if args.training_type == 'sungen':
         final_model_save_path = os.path.join(args.model_path, args.task, args.task_dataset, args.model_type)
-    elif args.training_type == 'unigen':
+    elif args.training_type in ['unigen', 'unigen_ablation_noisy_label', 'unigen_ablation_hard_label']:
         final_model_save_path = os.path.join(args.model_path, args.task, args.model_type)
     final_model_save_name = f'final_model_{args.training_type}_{args.gen_amount}_topk{args.gen_top_k}_topp{args.gen_top_p}_temp{args.gen_temperature}_retemp{args.gen_relabel_temperature}_th{args.gen_relabel_threshold}.pt'
 
@@ -574,6 +580,21 @@ def build_valid_subset(args, train_set: ClassificationDataset) -> Classification
     valid_subset.data_list = random.sample(valid_subset.data_list, args.sungen_valid_size)
 
     return valid_subset
+
+def build_solved_subset(args, train_set: ClassificationDataset, theta: torch.Tensor) -> ClassificationDataset:
+    """
+    Build a subset of training dataset for validation, for sungen/unigen training.
+    """
+
+    solved_subset = copy.deepcopy(train_set)
+
+    # Sort theta in descending order
+    theta_sorted, theta_sorted_idx = torch.sort(theta, descending=True)
+
+    # Select top args.sungen_train_size data from train_set
+    solved_subset.data_list = [solved_subset.data_list[i] for i in theta_sorted_idx[:args.sungen_train_size]]
+
+    return solved_subset
 
 def repass_backward(model, model_cache, optimizer_cache, grad_weights, dataloader, theta_mapped, theta, args, device):
     # accumulate gradients backwards to leverage hessian-vector product

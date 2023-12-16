@@ -8,6 +8,6 @@
         "1": "positive"
     },
     "prompts": {
-        "instruction": "The sentence in <Y> sentiment is: \"<X>\""
+        "instruction": "The text in <Y> sentiment is: \"<X>\""
     }
 }

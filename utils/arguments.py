@@ -14,7 +14,7 @@ class ArgParser():
         task_list = ['classification']
         self.parser.add_argument('--task', type=str, choices=task_list, default='classification',
                                  help='Task to do; Must be given.')
-        job_list = ['preprocessing', 'training', 'resume_training', 'testing', 'generating', 'inference', 'sungen_solve']
+        job_list = ['preprocessing', 'training', 'resume_training', 'testing', 'generating', 'inference', 'sungen_solve', 'visualize_tsne']
         self.parser.add_argument('--job', type=str, choices=job_list, default='training',
                                  help='Job to do; Must be given.')
         dataset_list = ['sst2', 'imdb', 'rotten', 'cr', 'yelp_polarity', 'amazon_polarity', 'tweet_sentiment_binary',
@@ -113,8 +113,8 @@ class ArgParser():
         self.parser.add_argument('--optimize_objective', type=str, choices=objective_list, default='accuracy',
                                  help='Objective to optimize; Default is accuracy')
         # Training arguments 3 - Supervised Contrastive Learning
-        self.parser.add_argument('--supcon_loss_weight', type=float, default=1.0,
-                                 help='Weight of the supervised contrastive loss; Default is 1.0')
+        self.parser.add_argument('--supcon_loss_weight', type=float, default=0.5,
+                                 help='Weight of the supervised contrastive loss; Default is 0.5')
         self.parser.add_argument('--supcon_temperature', type=float, default=0.2,
                                  help='Temperature of the supervised contrastive loss; Default is 0.2')
         self.parser.add_argument('--supcon_memory_bank_size', type=int, default=64,
@@ -146,6 +146,8 @@ class ArgParser():
         # UniGen arguments - SunGen
         self.parser.add_argument("--sungen_valid_size", type=int, default=50000,
                                  help="The size of validation set for UniGen/SunGen.")
+        self.parser.add_argument("--sungen_train_size", type=int, default=200000,
+                                 help="The size of training set for UniGen/SunGen.")
         self.parser.add_argument("--sungen_initial_weight", type=float, default=1.0,
                                  help="The initial weight for UniGen/SunGen.")
         self.parser.add_argument("--sungen_outer_lr", type=float, default=1e-1,

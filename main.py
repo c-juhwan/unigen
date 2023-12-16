@@ -24,7 +24,7 @@ def main(args: argparse.Namespace) -> None:
             if args.job == 'preprocessing':
                 from task.classification.preprocessing import preprocessing as job
             elif args.job in ['training', 'resume_training']:
-                if args.training_type in ['sungen', 'unigen']:
+                if args.training_type in ['sungen', 'unigen', 'unigen_ablation_noisy_label', 'unigen_ablation_hard_label']:
                     from task.classification.train_sungen import sungen_train as job
                 else:
                     from task.classification.train import training as job
@@ -36,6 +36,8 @@ def main(args: argparse.Namespace) -> None:
                 from task.classification.generation import generation as job
             elif args.job == 'sungen_solve':
                 from task.classification.train_sungen import sungen_solve as job
+            elif args.job == 'visualize_tsne':
+                from task.classification.visualize_tsne import visualize as job
             else:
                 raise ValueError(f'Invalid job: {args.job}')
 
