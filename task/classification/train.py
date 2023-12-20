@@ -136,7 +136,7 @@ def training(args: argparse.Namespace) -> None:
             # Train - Forward
             classification_logits, projected_cls = model(input_ids=input_data['input_ids'],
                                                          attention_mask=input_data['attention_mask'],
-                                                         token_type_ids=input_data['token_type_ids'] if args.model_type not in ['distilbert', 'roberta'] else None)
+                                                         token_type_ids=input_data['token_type_ids'] if args.model_type not in ['distilbert', 'roberta', 'roberta_large'] else None)
 
             # Train - Calculate loss
             batch_loss_cls = cls_loss(classification_logits, soft_labels)
@@ -145,7 +145,7 @@ def training(args: argparse.Namespace) -> None:
                     # Use momentum model for MoCo-style training
                     _, moco_cls = momentum_model(input_ids=input_data['input_ids'],
                                                  attention_mask=input_data['attention_mask'],
-                                                 token_type_ids=input_data['token_type_ids'] if args.model_type not in ['distilbert', 'roberta'] else None)
+                                                 token_type_ids=input_data['token_type_ids'] if args.model_type not in ['distilbert', 'roberta', 'roberta_large'] else None)
                 else:
                     moco_cls = None
                 batch_loss_supcon = supcon_loss(projected_cls, labels, moco_cls=moco_cls)
@@ -211,7 +211,7 @@ def training(args: argparse.Namespace) -> None:
             with torch.no_grad():
                 classification_logits, _ = model(input_ids=input_data['input_ids'],
                                                  attention_mask=input_data['attention_mask'],
-                                                 token_type_ids=input_data['token_type_ids'] if args.model_type not in ['distilbert', 'roberta'] else None)
+                                                 token_type_ids=input_data['token_type_ids'] if args.model_type not in ['distilbert', 'roberta', 'roberta_large'] else None)
 
             # Valid - Calculate loss and accuracy
             # We don't need to calculate supcon loss for validation

@@ -135,6 +135,8 @@ def get_huggingface_model_name(model_type: str) -> str:
     elif name == 't5':
         return 't5-large'
     elif name == 'roberta':
+        return 'roberta-base'
+    elif name == 'roberta_large':
         return 'roberta-large'
     elif name == 'electra':
         return 'google/electra-base-discriminator'

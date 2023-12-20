@@ -281,7 +281,7 @@ def sungen_train(args: argparse.Namespace):
             # Train - Forward
             classification_logits, projected_cls = model(input_ids=input_data['input_ids'],
                                                          attention_mask=input_data['attention_mask'],
-                                                         token_type_ids=input_data['token_type_ids'] if args.model_type not in ['distilbert', 'roberta'] else None)
+                                                         token_type_ids=input_data['token_type_ids'] if args.model_type not in ['distilbert', 'roberta', 'roberta_large'] else None)
 
             # Train - Calculate loss
             batch_loss_cls = F.cross_entropy(classification_logits, soft_labels, reduction='none').flatten() * best_theta_weight[index]
@@ -291,7 +291,7 @@ def sungen_train(args: argparse.Namespace):
                     # Use momentum model for MoCo-style training
                     _, moco_cls = momentum_model(input_ids=input_data['input_ids'],
                                                  attention_mask=input_data['attention_mask'],
-                                                 token_type_ids=input_data['token_type_ids'] if args.model_type not in ['distilbert', 'roberta'] else None)
+                                                 token_type_ids=input_data['token_type_ids'] if args.model_type not in ['distilbert', 'roberta', 'roberta_large'] else None)
                 else:
                     moco_cls = None
                 batch_loss_supcon = supcon_loss(projected_cls, labels, moco_cls=moco_cls, theta_weight=best_theta_weight[index])
@@ -358,7 +358,7 @@ def sungen_train(args: argparse.Namespace):
             with torch.no_grad():
                 classification_logits, _ = model(input_ids=input_data['input_ids'],
                                                  attention_mask=input_data['attention_mask'],
-                                                 token_type_ids=input_data['token_type_ids'] if args.model_type not in ['distilbert', 'roberta'] else None)
+                                                 token_type_ids=input_data['token_type_ids'] if args.model_type not in ['distilbert', 'roberta', 'roberta_large'] else None)
 
             # Valid - Calculate loss and accuracy
             # We don't need to calculate supcon loss for validation
@@ -494,7 +494,7 @@ def sungen_inner_train(model, train_loader, theta, args, device):
             model_copy.zero_grad()
             classification_logits, _ = model_copy(input_ids=input_data['input_ids'],
                                                     attention_mask=input_data['attention_mask'],
-                                                    token_type_ids=input_data['token_type_ids'] if args.model_type not in ['distilbert', 'roberta'] else None)
+                                                    token_type_ids=input_data['token_type_ids'] if args.model_type not in ['distilbert', 'roberta', 'roberta_large'] else None)
 
             # Inner - Calculate loss
             inner_ce_loss = F.cross_entropy(classification_logits, soft_labels, reduction='none').flatten() * theta[index]
@@ -536,7 +536,7 @@ def sungen_outer_get_grad_on_valid(model, valid_loader, theta, args, device):
         # Outer - Forward
         classification_logits, _ = model(input_ids=input_data['input_ids'],
                                          attention_mask=input_data['attention_mask'],
-                                         token_type_ids=input_data['token_type_ids'] if args.model_type not in ['distilbert', 'roberta'] else None)
+                                         token_type_ids=input_data['token_type_ids'] if args.model_type not in ['distilbert', 'roberta', 'roberta_large'] else None)
 
         # Outer - Get theta for the validation batch
         theta_batch = theta[index]
@@ -624,7 +624,7 @@ def pseudo_updated_params(pseudo_model, optimizer_cache, input_data, soft_labels
     w_old = [p for p in pseudo_model.parameters()]
     output, _ = pseudo_model(input_ids=input_data['input_ids'],
                              attention_mask=input_data['attention_mask'],
-                             token_type_ids=input_data['token_type_ids'] if args.model_type not in ['distilbert', 'roberta'] else None)
+                             token_type_ids=input_data['token_type_ids'] if args.model_type not in ['distilbert', 'roberta', 'roberta_large'] else None)
 
     pseudo_loss_vector = F.cross_entropy(output, soft_labels, reduction='none').flatten()
     pseudo_loss_vector *= theta

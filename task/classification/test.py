@@ -43,7 +43,7 @@ def testing(args: argparse.Namespace) -> tuple:
     # Load dataset and define dataloader
     write_log(logger, "Loading dataset")
     dataset_dict, dataloader_dict = {}, {}
-    dataset_dict['test'] = ClassificationDataset(args, os.path.join(args.preprocess_path, args.task, args.task_dataset, f'test_ORI.pkl'))
+    dataset_dict['test'] = ClassificationDataset(args, os.path.join(args.preprocess_path, args.task, args.test_dataset, f'test_ORI.pkl'))
 
     dataloader_dict['test'] = DataLoader(dataset_dict['test'], batch_size=args.batch_size, num_workers=args.num_workers,
                                          shuffle=False, pin_memory=True, drop_last=False)
@@ -83,7 +83,7 @@ def testing(args: argparse.Namespace) -> tuple:
                    config=args,
                    notes=args.description,
                    tags=["TEST",
-                         f"Dataset: {args.task_dataset}",
+                         f"Dataset: {args.test_dataset}",
                          f"Model: {args.model_type}",
                          f"Training: {args.training_type}"])
 
@@ -126,7 +126,7 @@ def testing(args: argparse.Namespace) -> tuple:
         writer.close()
     if args.use_wandb:
         wandb_df = pd.DataFrame({
-            'Dataset': [args.task_dataset],
+            'Dataset': [args.test_dataset],
             'Model': [args.model_type],
             'Training': [args.training_type],
             'Gen_TopK': [args.gen_top_k],

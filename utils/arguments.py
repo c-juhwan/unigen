@@ -31,6 +31,8 @@ class ArgParser():
                         'amazon_review_toys', 'amazon_review_videogames']
         self.parser.add_argument('--task_dataset', type=str, choices=dataset_list, default='sst2',
                                  help='Dataset for the task; Must be given.')
+        self.parser.add_argument('--test_dataset', type=str, choices=dataset_list, default='sst2',
+                                 help='Dataset for the test; Must be given for test.')
         training_type_list = ['supervised', 'prompting', 'zerogen', 'sungen', 'unigen', 'zs_inference',
                               'unigen_ablation_noisy_label', 'unigen_ablation_hard_label']
         self.parser.add_argument('--training_type', type=str, choices=training_type_list, default='supervised',
@@ -58,7 +60,7 @@ class ArgParser():
         # Model - Basic arguments
         self.parser.add_argument('--proj_name', type=str, default=self.proj_name,
                                  help='Name of the project.')
-        model_type_list = ['bert', 'roberta', 'distilbert', 'lstm', # Classification Model
+        model_type_list = ['bert', 'roberta', 'roberta_large', 'distilbert', 'lstm', # Classification Model
                            'gpt2', 'gpt2_large', 'gpt2_xl', 'opt', 'bloom'] # Generation Model
         self.parser.add_argument('--model_type', type=str, choices=model_type_list, default='distilbert',
                                  help='Type of the classification model to use.')
