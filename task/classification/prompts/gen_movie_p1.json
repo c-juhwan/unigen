@@ -1,0 +1,15 @@
+{
+    "placeholders": {
+        "text": "<X>",
+        "label": "<Y>",
+        "topic": "<Z>"
+    },
+    "labels": {
+        "0": "negative",
+        "1": "positive"
+    },
+    "prompts": {
+        "stage1": "The movie review in <Y> sentiment is: \"",
+        "stage2": "The movie review in <Y> sentiment is: \"<X>\""
+    }
+}

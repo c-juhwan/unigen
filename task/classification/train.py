@@ -267,7 +267,7 @@ def training(args: argparse.Namespace) -> None:
                 'model': model.state_dict(),
                 'optimizer': optimizer.state_dict(),
                 'scheduler': scheduler.state_dict() if scheduler is not None else None
-            }, os.path.join(checkpoint_save_path, f'checkpoint.pt'))
+            }, os.path.join(checkpoint_save_path, f'checkpoint_{args.training_type}.pt'))
             write_log(logger, f"VALID - Best valid at epoch {best_epoch_idx} - {args.optimize_objective}: {abs(best_valid_objective_value):.4f}")
             write_log(logger, f"VALID - Saved checkpoint to {checkpoint_save_path}")
         else:
@@ -313,7 +313,7 @@ def training(args: argparse.Namespace) -> None:
     final_model_save_name = f'final_model_{args.training_type}_{args.gen_amount}_topk{args.gen_top_k}_topp{args.gen_top_p}_temp{args.gen_temperature}_retemp{args.gen_relabel_temperature}_th{args.gen_relabel_threshold}.pt'
 
     check_path(final_model_save_path)
-    shutil.copyfile(os.path.join(checkpoint_save_path, 'checkpoint.pt'), os.path.join(final_model_save_path, final_model_save_name)) # Copy best checkpoint as final model
+    shutil.copyfile(os.path.join(checkpoint_save_path, f'checkpoint_{args.training_type}.pt'), os.path.join(final_model_save_path, final_model_save_name)) # Copy best checkpoint as final model
     write_log(logger, f"FINAL - Saved final model to {final_model_save_path}")
 
     if args.use_wandb:

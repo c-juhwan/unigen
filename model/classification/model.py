@@ -16,7 +16,7 @@ class ClassificationModel(nn.Module):
         super(ClassificationModel, self).__init__()
         self.args = args
 
-        if args.model_type in ['bert', 'distilbert', 'roberta']:
+        if args.model_type in ['bert', 'distilbert', 'roberta', 'roberta_large']:
             huggingface_model_name = get_huggingface_model_name(self.args.model_type)
             self.config = AutoConfig.from_pretrained(huggingface_model_name)
             if args.model_ispretrained:
@@ -49,7 +49,7 @@ class ClassificationModel(nn.Module):
         )
 
     def forward(self, input_ids: torch.Tensor, attention_mask: torch.Tensor, token_type_ids: torch.Tensor) -> torch.Tensor:
-        if self.args.model_type in ['bert', 'distilbert', 'roberta']:
+        if self.args.model_type in ['bert', 'distilbert', 'roberta', 'roberta_large']:
             if self.args.model_type == 'distilbert':
                 model_output = self.model(input_ids=input_ids, attention_mask=attention_mask, return_dict=True)
                 model_cls = model_output.last_hidden_state[:, 0, :] # (batch_size, hidden_size)

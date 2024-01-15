@@ -41,16 +41,16 @@ class ArgParser():
                                  help='Description of the experiment; Default is "default"')
 
         # Path arguments - Modify these paths to fit your environment
-        self.parser.add_argument('--data_path', type=str, default=f'/nas_homes/dataset',
+        self.parser.add_argument('--data_path', type=str, default=f'./dataset',
                                  help='Path to the dataset.')
-        self.parser.add_argument('--preprocess_path', type=str, default=f'/nas_homes/{self.user_name}/preprocessed/{self.proj_name}',
+        self.parser.add_argument('--preprocess_path', type=str, default=f'./preprocessed/{self.proj_name}',
                                  help='Path to the preprocessed dataset.')
-        self.parser.add_argument('--model_path', type=str, default=f'/nas_homes/{self.user_name}/model_final/{self.proj_name}',
+        self.parser.add_argument('--model_path', type=str, default=f'./model_final/{self.proj_name}',
                                  help='Path to the model after training.')
-        self.parser.add_argument('--checkpoint_path', type=str, default=f'/nas_homes/{self.user_name}/model_checkpoint/{self.proj_name}')
-        self.parser.add_argument('--result_path', type=str, default=f'/nas_homes/{self.user_name}/results/{self.proj_name}',
+        self.parser.add_argument('--checkpoint_path', type=str, default=f'./model_checkpoint/{self.proj_name}')
+        self.parser.add_argument('--result_path', type=str, default=f'./results/{self.proj_name}',
                                  help='Path to the result after testing.')
-        self.parser.add_argument('--log_path', type=str, default=f'/nas_homes/{self.user_name}/tensorboard_log/{self.proj_name}',
+        self.parser.add_argument('--log_path', type=str, default=f'./tensorboard_log/{self.proj_name}',
                                  help='Path to the tensorboard log file.')
         self.parser.add_argument('--cls_prompt', type=str, default=f'cls_p1',
                                  help='prompt file for classification.')
