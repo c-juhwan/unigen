@@ -64,6 +64,9 @@ def sungen_solve(args: argparse.Namespace) -> None:
     elif args.training_type == 'unigen_ablation_hard_label':
         dataset_dict['train'] = ClassificationDataset(args, os.path.join(args.preprocess_path, args.task, # UniGen is not task-specific
                                                                  f'train_UG_HL_{args.gen_amount}_topk{args.gen_top_k}_topp{args.gen_top_p}_temp{args.gen_temperature}_retemp{args.gen_relabel_temperature}_th{args.gen_relabel_threshold}.pkl'))
+    elif args.training_type == 'zerogen_combined':
+        dataset_dict['train'] = ClassificationDataset(args, os.path.join(args.preprocess_path, args.task, # Combined ZeroGen is task-specific
+                                                                 f'train_ZC_NL_{args.gen_amount}_topk{args.gen_top_k}_topp{args.gen_top_p}_temp{args.gen_temperature}_retemp{args.gen_relabel_temperature}_th{args.gen_relabel_threshold}.pkl'))
 
     dataloader_dict['train'] = DataLoader(dataset_dict['train'], batch_size=args.batch_size, num_workers=args.num_workers,
                                           shuffle=True, pin_memory=True, drop_last=True)
@@ -167,7 +170,7 @@ def sungen_train(args: argparse.Namespace):
     if args.training_type in ['unigen', 'unigen_ablation_noisy_label', 'unigen_ablation_hard_label']:
         checkpoint = torch.load(os.path.join(checkpoint_save_path, 'unigen_best_theta.pt'))
     else:
-        checkpoint = torch.load(os.path.join(checkpoint_save_path, 'sungen_best_theta.pt'))
+        checkpoint = torch.load(os.path.join(checkpoint_save_path, f'{args.training_type}_best_theta.pt'))
     best_theta_weight = checkpoint['theta'].to(device)
 
     # Load dataset and define dataloader
@@ -195,6 +198,11 @@ def sungen_train(args: argparse.Namespace):
                                                       f'train_UG_HL_{args.gen_amount}_topk{args.gen_top_k}_topp{args.gen_top_p}_temp{args.gen_temperature}_retemp{args.gen_relabel_temperature}_th{args.gen_relabel_threshold}.pkl'))
         dataset_dict['valid'] = ClassificationDataset(args, os.path.join(args.preprocess_path, args.task, # UniGen is not dataset-specific
                                                       f'valid_UG_HL_{args.gen_amount}_topk{args.gen_top_k}_topp{args.gen_top_p}_temp{args.gen_temperature}_retemp{args.gen_relabel_temperature}_th{args.gen_relabel_threshold}.pkl'))
+    elif args.training_type == 'zerogen_combined':
+        dataset_dict['train'] = ClassificationDataset(args, os.path.join(args.preprocess_path, args.task, # Combined is not dataset-specific
+                                                                 f'train_ZC_NL_{args.gen_amount}_topk{args.gen_top_k}_topp{args.gen_top_p}_temp{args.gen_temperature}_retemp{args.gen_relabel_temperature}_th{args.gen_relabel_threshold}.pkl'))
+        dataset_dict['valid'] = ClassificationDataset(args, os.path.join(args.preprocess_path, args.task, # Combined is not dataset-specific
+                                                                 f'valid_ZC_NL_{args.gen_amount}_topk{args.gen_top_k}_topp{args.gen_top_p}_temp{args.gen_temperature}_retemp{args.gen_relabel_temperature}_th{args.gen_relabel_threshold}.pkl'))
 
     dataset_dict['train'] = build_solved_subset(args, dataset_dict['train'], best_theta_weight)
 
@@ -459,7 +467,7 @@ def sungen_train(args: argparse.Namespace):
     # Final - Save best checkpoint as result model
     if args.training_type == 'sungen':
         final_model_save_path = os.path.join(args.model_path, args.task, args.task_dataset, args.model_type)
-    elif args.training_type in ['unigen', 'unigen_ablation_noisy_label', 'unigen_ablation_hard_label']:
+    elif args.training_type in ['unigen', 'unigen_ablation_noisy_label', 'unigen_ablation_hard_label', 'zerogen_combined']:
         final_model_save_path = os.path.join(args.model_path, args.task, args.model_type)
     final_model_save_name = f'final_model_{args.training_type}_{args.gen_amount}_topk{args.gen_top_k}_topp{args.gen_top_p}_temp{args.gen_temperature}_retemp{args.gen_relabel_temperature}_th{args.gen_relabel_threshold}.pt'
 

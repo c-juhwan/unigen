@@ -53,6 +53,16 @@ def training(args: argparse.Namespace) -> None:
                                                                  f'train_ZG_NL_{args.gen_amount}_topk{args.gen_top_k}_topp{args.gen_top_p}_temp{args.gen_temperature}_retemp{args.gen_relabel_temperature}_th{args.gen_relabel_threshold}.pkl'))
         dataset_dict['valid'] = ClassificationDataset(args, os.path.join(args.preprocess_path, args.task, args.task_dataset,
                                                                  f'valid_ZG_NL_{args.gen_amount}_topk{args.gen_top_k}_topp{args.gen_top_p}_temp{args.gen_temperature}_retemp{args.gen_relabel_temperature}_th{args.gen_relabel_threshold}.pkl'))
+    elif args.training_type == 'zerogen' and args.gen_relabel == 'hard':
+        dataset_dict['train'] = ClassificationDataset(args, os.path.join(args.preprocess_path, args.task, args.task_dataset,
+                                                                 f'train_ZG_HL_{args.gen_amount}_topk{args.gen_top_k}_topp{args.gen_top_p}_temp{args.gen_temperature}_retemp{args.gen_relabel_temperature}_th{args.gen_relabel_threshold}.pkl'))
+        dataset_dict['valid'] = ClassificationDataset(args, os.path.join(args.preprocess_path, args.task, args.task_dataset,
+                                                                 f'valid_ZG_HL_{args.gen_amount}_topk{args.gen_top_k}_topp{args.gen_top_p}_temp{args.gen_temperature}_retemp{args.gen_relabel_temperature}_th{args.gen_relabel_threshold}.pkl'))
+    elif args.training_type == 'zerogen' and args.gen_relabel == 'soft':
+        dataset_dict['train'] = ClassificationDataset(args, os.path.join(args.preprocess_path, args.task, args.task_dataset,
+                                                                 f'train_ZG_SL_{args.gen_amount}_topk{args.gen_top_k}_topp{args.gen_top_p}_temp{args.gen_temperature}_retemp{args.gen_relabel_temperature}_th{args.gen_relabel_threshold}.pkl'))
+        dataset_dict['valid'] = ClassificationDataset(args, os.path.join(args.preprocess_path, args.task, args.task_dataset,
+                                                                 f'valid_ZG_SL_{args.gen_amount}_topk{args.gen_top_k}_topp{args.gen_top_p}_temp{args.gen_temperature}_retemp{args.gen_relabel_temperature}_th{args.gen_relabel_threshold}.pkl'))
 
     dataloader_dict['train'] = DataLoader(dataset_dict['train'], batch_size=args.batch_size, num_workers=args.num_workers,
                                           shuffle=True, pin_memory=True, drop_last=True)

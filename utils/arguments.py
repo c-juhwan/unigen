@@ -34,23 +34,23 @@ class ArgParser():
         self.parser.add_argument('--test_dataset', type=str, choices=dataset_list, default='sst2',
                                  help='Dataset for the test; Must be given for test.')
         training_type_list = ['supervised', 'prompting', 'zerogen', 'sungen', 'unigen', 'zs_inference',
-                              'unigen_ablation_noisy_label', 'unigen_ablation_hard_label']
+                              'unigen_ablation_noisy_label', 'unigen_ablation_hard_label', 'zerogen_combined']
         self.parser.add_argument('--training_type', type=str, choices=training_type_list, default='supervised',
                                  help='Type of training to use; Default is supervised')
         self.parser.add_argument('--description', type=str, default='default',
                                  help='Description of the experiment; Default is "default"')
 
         # Path arguments - Modify these paths to fit your environment
-        self.parser.add_argument('--data_path', type=str, default=f'./dataset',
+        self.parser.add_argument('--data_path', type=str, default=f'/nas_homes/{self.user_name}/dataset',
                                  help='Path to the dataset.')
-        self.parser.add_argument('--preprocess_path', type=str, default=f'./preprocessed/{self.proj_name}',
+        self.parser.add_argument('--preprocess_path', type=str, default=f'/nas_homes/{self.user_name}/preprocessed/{self.proj_name}',
                                  help='Path to the preprocessed dataset.')
-        self.parser.add_argument('--model_path', type=str, default=f'./model_final/{self.proj_name}',
+        self.parser.add_argument('--model_path', type=str, default=f'/nas_homes/{self.user_name}/model_final/{self.proj_name}',
                                  help='Path to the model after training.')
-        self.parser.add_argument('--checkpoint_path', type=str, default=f'./model_checkpoint/{self.proj_name}')
+        self.parser.add_argument('--checkpoint_path', type=str, default=f'/nas_homes/{self.user_name}/model_checkpoint/{self.proj_name}')
         self.parser.add_argument('--result_path', type=str, default=f'./results/{self.proj_name}',
                                  help='Path to the result after testing.')
-        self.parser.add_argument('--log_path', type=str, default=f'./tensorboard_log/{self.proj_name}',
+        self.parser.add_argument('--log_path', type=str, default=f'/nas_homes/{self.user_name}/tensorboard_log/{self.proj_name}',
                                  help='Path to the tensorboard log file.')
         self.parser.add_argument('--cls_prompt', type=str, default=f'cls_p1',
                                  help='prompt file for classification.')
@@ -60,7 +60,7 @@ class ArgParser():
         # Model - Basic arguments
         self.parser.add_argument('--proj_name', type=str, default=self.proj_name,
                                  help='Name of the project.')
-        model_type_list = ['bert', 'roberta', 'roberta_large', 'distilbert', 'lstm', # Classification Model
+        model_type_list = ['bert', 'roberta', 'roberta_large', 'distilbert', 'tinybert', 'lstm', 'cnn', # Classification Model
                            'gpt2', 'gpt2_large', 'gpt2_xl', 'opt', 'bloom'] # Generation Model
         self.parser.add_argument('--model_type', type=str, choices=model_type_list, default='distilbert',
                                  help='Type of the classification model to use.')

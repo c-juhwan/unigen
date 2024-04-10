@@ -26,6 +26,18 @@ class ClassificationModel(nn.Module):
 
             self.cls_size = self.config.hidden_size
             self.num_classes = self.args.num_classes
+        elif args.model_type == 'cnn':
+            each_out_size = args.embed_size // 3
+
+            self.embed = nn.Embedding(args.vocab_size, args.embed_size)
+            self.conv = nn.ModuleList(
+                [nn.Conv1d(in_channels=args.embed_size, out_channels=each_out_size,
+                           kernel_size=kernel_size, stride=1, padding='same', bias=False)
+                           for kernel_size in [3, 4, 5]]
+            )
+
+            self.cls_size = each_out_size * 3
+            self.num_classes = self.args.num_classes
         elif args.model_type == 'lstm':
             self.embed = nn.Embedding(args.vocab_size, args.embed_size)
 
@@ -59,6 +71,16 @@ class ClassificationModel(nn.Module):
 
             projected_cls = self.projector(model_cls) # (batch_size, projection_size)
             classification_logits = self.classifier(projected_cls) # (batch_size, num_classes)
+        elif self.args.model_type == 'cnn':
+            embed = self.embed(input_ids) # (batch_size, seq_len, embed_size)
+            embed = embed.permute(0, 2, 1)
+
+            conv_output = [conv(embed) for conv in self.conv] # [(batch_size, each_out_size, seq_len), ...]
+            # Apply global max pooling to each conv output
+            pooled_output = [torch.max(conv, dim=-1)[0] for conv in conv_output]
+            pooled_output = torch.cat(pooled_output, dim=-1) # (batch_size, each_out_size * 3)
+
+            classification_logits = self.classifier(pooled_output) # (batch_size, num_classes)
         elif self.args.model_type == 'lstm':
             embed = self.embed(input_ids) # (batch_size, seq_len, embed_size)
 

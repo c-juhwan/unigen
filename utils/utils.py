@@ -135,7 +135,7 @@ def get_huggingface_model_name(model_type: str) -> str:
     elif name == 'bart':
         return 'facebook/bart-large'
     elif name == 't5':
-        return 't5-large'
+        return 'google-t5/t5-large'
     elif name == 'roberta':
         return 'roberta-base'
     elif name == 'roberta_large':
@@ -148,6 +148,8 @@ def get_huggingface_model_name(model_type: str) -> str:
         return 'microsoft/deberta-base'
     elif name == 'debertav3':
         return 'microsoft/deberta-v3-base'
+    elif name == 'tinybert':
+        return 'huawei-noah/TinyBERT_General_4L_312D'
     elif name == 'gpt2':
         return 'gpt2'
     elif name == 'gpt2_large':

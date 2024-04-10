@@ -24,7 +24,7 @@ def main(args: argparse.Namespace) -> None:
             if args.job == 'preprocessing':
                 from task.classification.preprocessing import preprocessing as job
             elif args.job in ['training', 'resume_training']:
-                if args.training_type in ['sungen', 'unigen', 'unigen_ablation_noisy_label', 'unigen_ablation_hard_label']:
+                if args.training_type in ['sungen', 'unigen', 'unigen_ablation_noisy_label', 'unigen_ablation_hard_label', 'zerogen_combined']:
                     from task.classification.train_sungen import sungen_train as job
                 else:
                     from task.classification.train import training as job

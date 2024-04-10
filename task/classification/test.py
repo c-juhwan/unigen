@@ -63,7 +63,7 @@ def testing(args: argparse.Namespace) -> tuple:
     write_log(logger, "Loading model weights")
     final_model_save_name = f'final_model_{args.training_type}_{args.gen_amount}_topk{args.gen_top_k}_topp{args.gen_top_p}_temp{args.gen_temperature}_retemp{args.gen_relabel_temperature}_th{args.gen_relabel_threshold}.pt'
 
-    if args.training_type in ['unigen', 'unigen_ablation_noisy_label', 'unigen_ablation_hard_label']:
+    if args.training_type in ['unigen', 'unigen_ablation_noisy_label', 'unigen_ablation_hard_label', 'zerogen_combined']:
         load_model_name = os.path.join(args.model_path, args.task, args.model_type, final_model_save_name)
     else:
         load_model_name = os.path.join(args.model_path, args.task, args.task_dataset, args.model_type, final_model_save_name)
