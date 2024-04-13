@@ -80,7 +80,8 @@ class ClassificationModel(nn.Module):
             pooled_output = [torch.max(conv, dim=-1)[0] for conv in conv_output]
             pooled_output = torch.cat(pooled_output, dim=-1) # (batch_size, each_out_size * 3)
 
-            classification_logits = self.classifier(pooled_output) # (batch_size, num_classes)
+            projected_cls = self.projector(pooled_output) # (batch_size, projection_size)
+            classification_logits = self.classifier(projected_cls) # (batch_size, num_classes)
         elif self.args.model_type == 'lstm':
             embed = self.embed(input_ids) # (batch_size, seq_len, embed_size)
 
