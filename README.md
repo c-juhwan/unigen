@@ -4,7 +4,7 @@
 
 This repository contains the source code for the paper ["UniGen: Universal Domain Generalization for Sentiment Classification via Zero-shot Dataset Generation"](https://arxiv.org/pdf/2405.01022). We propose a novel domain generalization method, UniGen, which is based on zero-shot dataset generation. UniGen generates a new synthetic dataset without a specified target domain, thus enabling the model to generalize to unseen domains. Please refer to the paper for more details.
 
-![Figure](./unigen_figure.jpg)
+![Figure](./unigen_figure.png)
 
 ## Experiment
 
