@@ -1,18 +1,16 @@
-# Multi-News+: Cost-efficient Dataset Cleansing via LLM-based Data Annotation
+# UniGen: Universal Domain Generalization for Sentiment Classification via Zero-shot Dataset Generation
 
 ## Introduction
 
-This repository contains the source code for the paper ["Multi-News+: Cost-efficient Dataset Cleansing via LLM-based Data Annotation"](https://arxiv.org/pdf/2404.09682). We found that previous dataset contains noisy data, which can degrade the performance of the model. To address this issue, we propose a cost-efficient dataset cleansing method using a large language model (LLM), instead of human annotators. We demonstrate that our method can effectively cleanse the dataset by removing noisy data, which improves the performance of the model. Please refer to the paper for more details.
+This repository contains the source code for the paper ["UniGen: Universal Domain Generalization for Sentiment Classification via Zero-shot Dataset Generation"](https://arxiv.org/pdf/2405.01022). We propose a novel domain generalization method, UniGen, which is based on zero-shot dataset generation. UniGen generates a new synthetic dataset without a specified target domain, thus enabling the model to generalize to unseen domains. Please refer to the paper for more details.
 
-![Figure](./multinewsplus_figure.jpg)
+![Figure](./unigen_figure.jpg)
 
 ## Experiment
 
-First, unzip two .tar.gz files in the `cleansing` directory. Then, run the following commands to install the required packages and execute the experiment.
-
 ```shell
-$ conda create -n proj-multinewsplus python=3.8
-$ conda activate proj-multinewsplus
+$ conda create -n proj-unigen python=3.8
+$ conda activate proj-unigen
 $ pip install torch==1.13.1+cu116 torchvision==0.14.1+cu116 torchaudio==0.13.1 --extra-index-url https://download.pytorch.org/whl/cu116
 $ pip install -r requirements.txt
 $ bash run_experiment.sh
@@ -21,10 +19,10 @@ $ bash run_experiment.sh
 ## Citation
 
 ```bibtex
-@article{choi2024multi,
-  title={Multi-News+: Cost-efficient Dataset Cleansing via LLM-based Data Annotation},
-  author={Choi, Juhwan and Yun, Jungmin and Jin, Kyohoon and Kim, YoungBin},
-  journal={arXiv preprint arXiv:2404.09682},
+@article{choi2024unigen,
+  title={UniGen: Universal Domain Generalization for Sentiment Classification via Zero-shot Dataset Generation},
+  author={Choi, Juhwan and Kim, Yeonghwa and Yu, Seunguk and Yun, JungMin and Kim, YoungBin},
+  journal={arXiv preprint arXiv:2405.01022},
   year={2024}
 }
 ```
